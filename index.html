@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bíblia de Jerusalém - Leitor Online</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="palette-2">
+    <div class="overlay" id="overlay"></div>
+    <div class="container">
+        <!-- Header -->
+        <header class="main-header">
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Menu">
+                <span class="menu-icon">☰</span>
+            </button>
+            <h1 class="site-title">Bíblia de Jerusalém</h1>
+            <div class="header-controls">
+                <button class="font-size-btn" id="decrease-font" title="Diminuir fonte">A-</button>
+                <button class="font-size-btn" id="increase-font" title="Aumentar fonte">A+</button>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Livros da Bíblia</h2>
+                <input type="text" id="search-book" placeholder="Buscar livro..." class="search-input">
+            </div>
+            
+            <div class="testament-section">
+                <h3 class="testament-title">Antigo Testamento</h3>
+                <ul id="old-testament-list" class="book-list">
+                    <!-- Old Testament books will be loaded here -->
+                </ul>
+            </div>
+            
+            <div class="testament-section">
+                <h3 class="testament-title">Novo Testamento</h3>
+                <ul id="new-testament-list" class="book-list">
+                    <!-- New Testament books will be loaded here -->
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content" id="content">
+            <div id="bible-text" class="bible-content">
+                <div class="welcome-message">
+                    <h1>Bem-vindo ao Leitor da Bíblia de Jerusalém</h1>
+                    <p class="intro-text">Selecione um livro da Bíblia no menu lateral para começar sua leitura espiritual.</p>
+                    <div class="welcome-icon">✝</div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

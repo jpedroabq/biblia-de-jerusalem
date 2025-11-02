@@ -1,0 +1,647 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
+:root {
+    --primary-color: #8B4513;
+    --secondary-color: #CD853F;
+    --text-color: #2c2c2c;
+    --bg-color: #f8f5f0;
+    --sidebar-bg: #2c3e50;
+    --sidebar-text: #ecf0f1;
+    --accent-gold: #d4af37;
+    --verse-number: #8B4513;
+    --border-color: #d4cfc4;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --base-font-size: 20px;
+}
+
+html {
+    font-size: var(--base-font-size);
+}
+
+body {
+    font-family: 'Crimson Text', 'Georgia', serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+    position: relative;
+}
+
+/* Header Styles */
+.main-header {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 10px var(--shadow);
+    z-index: 100;
+}
+
+.site-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    min-width: 48px;
+    min-height: 48px;
+}
+
+.mobile-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.mobile-menu-btn:active {
+    transform: scale(0.95);
+}
+
+.header-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.font-size-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    min-width: 44px;
+}
+
+.font-size-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.font-size-btn:active {
+    transform: translateY(0);
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text);
+    overflow-y: auto;
+    box-shadow: 2px 0 10px var(--shadow);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 1.5rem 1rem 1rem;
+    background: rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.sidebar-header h2 {
+    font-family: 'Cinzel', serif;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: var(--accent-gold);
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.search-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 2px var(--accent-gold);
+}
+
+.testament-section {
+    padding: 0 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.testament-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    color: var(--accent-gold);
+    padding: 1rem 0.5rem 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent-gold);
+}
+
+.book-list {
+    list-style: none;
+    padding: 0;
+}
+
+.book-list li {
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-bottom: 0.3rem;
+    transition: all 0.3s ease;
+    touch-action: manipulation;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+}
+
+.book-list li:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding-left: 1.3rem;
+    color: var(--accent-gold);
+}
+
+.book-list li:active {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.book-list li.active {
+    background-color: var(--accent-gold);
+    color: var(--sidebar-bg);
+    font-weight: 600;
+}
+
+/* Main Content Styles */
+.content {
+    overflow-y: auto;
+    background: linear-gradient(to bottom, #ffffff 0%, var(--bg-color) 100%);
+    position: relative;
+}
+
+.bible-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    background-color: white;
+    min-height: 100%;
+    box-shadow: 0 0 30px var(--shadow);
+}
+
+/* Welcome Message */
+.welcome-message {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.welcome-message h1 {
+    font-family: 'Cinzel', serif;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 2px var(--shadow);
+}
+
+.intro-text {
+    font-size: 1.3rem;
+    color: var(--text-color);
+    margin-bottom: 2rem;
+    line-height: 1.8;
+}
+
+.welcome-icon {
+    font-size: 4rem;
+    color: var(--accent-gold);
+    margin-top: 2rem;
+    opacity: 0.5;
+}
+
+/* Bible Text Styles */
+.book-title {
+    font-family: 'Cinzel', serif;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px double var(--accent-gold);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.chapter-title {
+    font-family: 'Cinzel', serif;
+    color: var(--secondary-color);
+    font-size: 1.8rem;
+    margin: 2.5rem 0 1.5rem;
+    padding-left: 0.5rem;
+    border-left: 4px solid var(--accent-gold);
+}
+
+.section-title {
+    font-family: 'Cinzel', serif;
+    color: var(--primary-color);
+    font-size: 1.3rem;
+    margin: 2rem 0 1rem;
+    font-weight: 600;
+    font-style: italic;
+}
+
+/* Verse Styling - THIS IS THE KEY IMPROVEMENT */
+.verse-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    counter-reset: verse-counter;
+}
+
+.verse-item {
+    position: relative;
+    padding-left: 3.5rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.9;
+    text-align: justify;
+    counter-increment: verse-counter;
+    text-indent: 0;
+}
+
+.verse-item::before {
+    content: counter(verse-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+    color: var(--verse-number);
+    font-size: 0.85em;
+    min-width: 2.5rem;
+    text-align: right;
+    padding-right: 0.5rem;
+    font-family: 'Crimson Text', serif;
+}
+
+.verse-item.verse-start {
+    margin-top: 1.5rem;
+}
+
+/* Paragraph styles for non-verse content */
+.bible-content p {
+    margin: 1.2rem 0;
+    text-align: justify;
+    line-height: 1.9;
+}
+
+/* Introduction and special text */
+.introduction {
+    font-style: italic;
+    color: #555;
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-left: 4px solid var(--accent-gold);
+    margin: 2rem 0;
+    border-radius: 4px;
+}
+
+/* Blockquote and special formatting */
+blockquote {
+    border-left: 4px solid var(--accent-gold);
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #555;
+}
+
+/* Scrollbar Styling */
+.sidebar::-webkit-scrollbar,
+.content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: var(--accent-gold);
+    border-radius: 5px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: #b8941f;
+}
+
+.content::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+
+.content::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+    border-radius: 5px;
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+
+    .main-header {
+        padding: 0.8rem 1rem;
+    }
+
+    .site-title {
+        font-size: 1.1rem;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    .header-controls {
+        gap: 0.3rem;
+    }
+
+    .font-size-btn {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.9rem;
+        min-width: 40px;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 85vw;
+        max-width: 320px;
+        transform: translateX(-100%);
+        z-index: 999;
+        box-shadow: 2px 0 15px var(--shadow);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-header {
+        padding-top: 4rem;
+    }
+
+    .bible-content {
+        padding: 2rem 1.2rem;
+        box-shadow: none;
+    }
+
+    .welcome-message {
+        padding: 2rem 1rem;
+    }
+
+    .welcome-message h1 {
+        font-size: 1.8rem;
+    }
+
+    .intro-text {
+        font-size: 1.1rem;
+    }
+
+    .book-title {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+
+    .chapter-title {
+        font-size: 1.4rem;
+        margin: 2rem 0 1rem;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+    }
+
+    .verse-item {
+        padding-left: 3rem;
+        font-size: 0.95rem;
+    }
+
+    :root {
+        --base-font-size: 18px;
+    }
+}
+
+/* Tablet Styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        grid-template-columns: 250px 1fr;
+    }
+
+    .bible-content {
+        max-width: 750px;
+        padding: 2.5rem 1.5rem;
+    }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+    :root {
+        --base-font-size: 16px;
+    }
+
+    .site-title {
+        font-size: 1rem;
+    }
+
+    .welcome-message h1 {
+        font-size: 1.5rem;
+    }
+
+    .intro-text {
+        font-size: 1rem;
+    }
+
+    .book-title {
+        font-size: 1.5rem;
+    }
+
+    .chapter-title {
+        font-size: 1.2rem;
+    }
+
+    .verse-item {
+        padding-left: 2.5rem;
+        font-size: 0.9rem;
+    }
+
+    .verse-item::before {
+        font-size: 0.75rem;
+        min-width: 1.5rem;
+    }
+
+    .bible-content {
+        padding: 1.5rem 1rem;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .bible-content {
+        padding: 1.5rem 1rem;
+    }
+
+    .sidebar {
+        width: 280px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .sidebar,
+    .main-header,
+    .mobile-menu-btn,
+    .overlay {
+        display: none !important;
+    }
+
+    .container {
+        display: block;
+    }
+
+    .content {
+        overflow: visible;
+    }
+
+    .bible-content {
+        max-width: 100%;
+        padding: 1rem;
+        box-shadow: none;
+    }
+
+    .verse-item {
+        page-break-inside: avoid;
+    }
+}
+
+/* Loading animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.bible-content {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    :root {
+        --primary-color: #000;
+        --text-color: #000;
+        --bg-color: #fff;
+    }
+    
+    .verse-item::before {
+        color: #000;
+        font-weight: 900;
+    }
+}
+
+/* ---------------------------------------------------------------------------
+   Alternative Palette: Dark Blue + Yellow
+   Usage: add `class="palette-2"` to the <body> element to enable this palette.
+   This keeps dark blue and yellow as requested and overrides the root variables
+   so all components automatically pick up the new colors.
+----------------------------------------------------------------------------*/
+.palette-2 {
+    --primary-color: #0b3d91;      /* deep dark blue (titles, primary accents) */
+    --secondary-color: #165fbf;    /* slightly brighter blue for accents */
+    --text-color: #162433;         /* dark slate for readable body text */
+    --bg-color: #f6f8fb;           /* very light blue/white page background */
+    --sidebar-bg: #071730;        /* nearly-black navy for sidebar */
+    --sidebar-text: #f6f7fb;      /* soft white for sidebar text */
+    --accent-gold: #FFD24D;       /* warm yellow for highlights */
+    --verse-number: #0b3d91;      /* verse numbers in dark blue */
+    --border-color: rgba(11,61,145,0.12);
+    --shadow: rgba(8,24,56,0.25);
+}
+
+/* Small tweak: make scrollbar thumbs a matching blue/yellow when palette-2 is active */
+.palette-2 .sidebar::-webkit-scrollbar-thumb {
+    background: var(--accent-gold);
+}
+
+.palette-2 .content::-webkit-scrollbar-thumb {
+    background: var(--secondary-color);
+}
