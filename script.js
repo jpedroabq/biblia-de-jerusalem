@@ -23,8 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const MIN_FONT_SIZE = 14;
     const MAX_FONT_SIZE = 28;
     const THEME_STORAGE_KEY = 'bjr-preferred-theme';
+    const READING_STATE_KEY = 'bjr-reading-state';
 
     initTheme();
+    initReadingPersistence();
 
     // Books that belong to New Testament (starting from Matthew)
     const newTestamentBooks = [
@@ -205,6 +207,83 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Reading persistence functions
+    function initReadingPersistence() {
+        // Load saved reading state on page load
+        const savedState = getSavedReadingState();
+        if (savedState) {
+            // Wait for books to be loaded, then restore state
+            const checkBooksLoaded = setInterval(() => {
+                if (Object.keys(books).length > 0) {
+                    clearInterval(checkBooksLoaded);
+                    restoreReadingState(savedState);
+                }
+            }, 100);
+        }
+
+        // Save reading state when scrolling
+        let scrollTimeout;
+        content.addEventListener('scroll', () => {
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(saveCurrentReadingState, 500);
+        });
+    }
+
+    function saveCurrentReadingState() {
+        const activeBook = document.querySelector('.book-list li.active');
+        if (activeBook && bibleText.querySelector('.book-title')) {
+            const bookName = activeBook.getAttribute('data-book');
+            const scrollPosition = content.scrollTop;
+            
+            const state = {
+                bookName: bookName,
+                scrollPosition: scrollPosition,
+                timestamp: Date.now()
+            };
+            
+            try {
+                localStorage.setItem(READING_STATE_KEY, JSON.stringify(state));
+            } catch (error) {
+                // Ignore storage errors
+            }
+        }
+    }
+
+    function getSavedReadingState() {
+        try {
+            const saved = localStorage.getItem(READING_STATE_KEY);
+            return saved ? JSON.parse(saved) : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    function restoreReadingState(state) {
+        const { bookName, scrollPosition } = state;
+        
+        // Find the book element
+        const bookElement = document.querySelector(`.book-list li[data-book="${bookName}"]`);
+        if (bookElement) {
+            // Load the book
+            const range = bookElement.getAttribute('data-range');
+            
+            // Update active state
+            document.querySelectorAll('.book-list li').forEach(item => 
+                item.classList.remove('active'));
+            bookElement.classList.add('active');
+            bookElement.classList.add('restoring'); // Temporary class to prevent scroll to top
+            
+            // Load the book content
+            loadBook(range, bookName, () => {
+                // After loading, restore scroll position
+                setTimeout(() => {
+                    content.scrollTop = scrollPosition;
+                    bookElement.classList.remove('restoring'); // Remove temporary class
+                }, 100);
+            });
+        }
+    }
+
     // Search functionality
     searchInput.addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase();
@@ -283,15 +362,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 loadBook(range, bookName);
                 
+                // Save state after book change
+                setTimeout(saveCurrentReadingState, 100);
+                
                 if (window.innerWidth <= 768) {
                     closeSidebar();
                 }
-                content.scrollTop = 0;
+                // Don't scroll to top when restoring state
+                if (!this.classList.contains('restoring')) {
+                    content.scrollTop = 0;
+                }
             });
         });
     }
 
-    function loadBook(range, bookName) {
+    function loadBook(range, bookName, callback = null) {
         const [start, end] = range.split('-').map(Number);
         
         fetch('biblia.md')
@@ -306,6 +391,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const content = lines.slice(start - 1, end).join('\n');
                 const formattedHtml = formatBibleText(content, bookName);
                 bibleText.innerHTML = formattedHtml;
+                
+                if (callback) {
+                    callback();
+                }
             })
             .catch(error => {
                 bibleText.innerHTML = `
@@ -313,6 +402,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <h1>Erro</h1>
                         <p class="intro-text">Não foi possível carregar o livro: ${error.message}</p>
                     </div>`;
+                
+                if (callback) {
+                    callback();
+                }
             });
     }
 
