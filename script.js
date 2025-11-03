@@ -436,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (hasVerses) {
                 if (!isInVerseList) {
-                    html += '<ol class="verse-list">';
+                    html += '<div class="verse-list">';
                     isInVerseList = true;
                 }
                 
@@ -445,9 +445,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 const subtitleMatch = line.match(/^(.+?)\s+-\s+(\d+\s+.+)$/);
                 if (subtitleMatch) {
                     // Close verse list, add subtitle, reopen verse list
-                    html += '</ol>';
+                    html += '</div>';
                     html += `<h3 class="section-title">${subtitleMatch[1]}</h3>`;
-                    html += '<ol class="verse-list">';
+                    html += '<div class="verse-list">';
                     line = subtitleMatch[2]; // Continue with verse part
                 }
                 
@@ -469,31 +469,34 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
                 
-                // Extract verse texts
+                // Extract verse texts WITH their numbers
                 for (let j = 0; j < matches.length; j++) {
                     const currentMatch = matches[j];
                     const nextMatch = matches[j + 1];
                     
-                    // Get text from after current verse number to before next verse number (or end)
-                    const startPos = currentMatch.index + currentMatch.fullMatchLength;
+                    // Get text from current verse number to before next verse number (or end)
+                    const startPos = currentMatch.index;
                     const endPos = nextMatch ? nextMatch.index : remainingText.length;
                     
                     let verseText = remainingText.substring(startPos, endPos).trim();
                     
                     if (verseText) {
-                        verses.push(verseText);
+                        // Format the verse with number in a span
+                        const verseNum = currentMatch.number;
+                        const verseContent = remainingText.substring(currentMatch.index + currentMatch.fullMatchLength, endPos).trim();
+                        verses.push({ number: verseNum, content: verseContent });
                     }
                 }
                 
                 // Output all verses
-                verses.forEach(verseText => {
-                    html += `<li class="verse-item">${verseText}</li>`;
+                verses.forEach(verse => {
+                    html += `<p class="verse-item"><sup class="verse-number">${verse.number}</sup>${verse.content}</p>`;
                 });
                 
             } else {
                 // Not a verse line
                 if (isInVerseList) {
-                    html += '</ol>';
+                    html += '</div>';
                     isInVerseList = false;
                 }
                 
@@ -509,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Close any open verse list
         if (isInVerseList) {
-            html += '</ol>';
+            html += '</div>';
         }
         
         return html;
